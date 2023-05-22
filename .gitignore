@@ -1,3 +1,5 @@
 .idea
 .vscode
 lembra
+bin/
+reminders.db
