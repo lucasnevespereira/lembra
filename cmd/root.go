@@ -6,11 +6,7 @@ import (
 	"os"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "lembra",
-	Short: "lembra is a reminder cli tool",
-	Long:  "lembra is a reminder cli tool that allows to set up a reminder in a given time, that reminder executes a OS notification",
-}
+var rootCmd = &cobra.Command{}
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {

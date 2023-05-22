@@ -1,89 +1,87 @@
 package repository
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/lucasnevespereira/lembra/internal/reminder"
-	_ "github.com/mattn/go-sqlite3"
-	"time"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type ReminderRepository struct {
-	*sql.DB
+	db *gorm.DB
 }
 
-func setupDatabase() (*sql.DB, error) {
-	var err error
-
-	// Open the SQLite database connection
-	db, err := sql.Open("sqlite3", "reminders.db")
+func NewReminderRepository() (*ReminderRepository, error) {
+	db, err := gorm.Open(sqlite.Open("reminders.db"), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to open database connection: %v", err)
 	}
 
-	err = db.Ping()
+	err = db.AutoMigrate(&reminder.Reminder{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to ping reminders db: %v", err)
+		return nil, fmt.Errorf("failed to migrate reminders table: %v", err)
 	}
 
-	_, err = db.Exec(`
-		CREATE TABLE IF NOT EXISTS reminders (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			title TEXT,
-			message TEXT,
-			sound TEXT,
-			time TEXT
-		)
-	`)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create reminders table: %v", err)
-	}
-
-	return db, nil
-}
-
-func NewReminderRepository() (*ReminderRepository, error) {
-	database, err := setupDatabase()
-	if err != nil {
-		return nil, err
-	}
 	return &ReminderRepository{
-		database,
+		db: db,
 	}, nil
 }
 
-func (r *ReminderRepository) Save(reminder *reminder.Reminder) error {
-	stmt, err := r.Prepare("INSERT INTO reminders (title, message, sound, time) VALUES (?, ?, ?, ?)")
-	if err != nil {
-		return fmt.Errorf("failed to prepare SQL statement: %v", err)
+func (r *ReminderRepository) Create(reminder *reminder.Reminder) error {
+	result := r.db.Create(reminder)
+	if result.Error != nil {
+		return fmt.Errorf("failed to create reminder: %v", result.Error)
 	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec(reminder.Title, reminder.Message, reminder.Sound, reminder.Time)
-	if err != nil {
-		return fmt.Errorf("failed to execute SQL statement: %v", err)
-	}
-
 	return nil
 }
 
+func (r *ReminderRepository) GetAll() ([]*reminder.Reminder, error) {
+	var reminders []*reminder.Reminder
+	result := r.db.Find(&reminders)
+	if result.Error != nil {
+		return nil, fmt.Errorf("failed to retrieve reminders: %v", result.Error)
+	}
+	return reminders, nil
+}
+
 func (r *ReminderRepository) GetByID(id string) (*reminder.Reminder, error) {
-	row := r.QueryRow("SELECT title, message, sound, time FROM reminders WHERE id = ?", id)
-
-	var title, message, sound string
-	var timeStr string
-	err := row.Scan(&title, &message, &sound, &timeStr)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, err
-		}
-		return nil, fmt.Errorf("failed to scan reminder row: %v", err)
+	var reminder *reminder.Reminder
+	result := r.db.First(&reminder, "id = ?", id)
+	if result.Error != nil {
+		return nil, fmt.Errorf("failed to retrieve reminder with id %s: %v", id, result.Error)
 	}
 
-	time, err := time.Parse("2006-01-02 15:04", timeStr)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse reminder time: %v", err)
-	}
+	return reminder, nil
+}
 
-	return reminder.NewReminder(title, message, sound, time), nil
+func (r *ReminderRepository) Update(reminder *reminder.Reminder) error {
+	result := r.db.Save(reminder)
+	if result.Error != nil {
+		return fmt.Errorf("failed to update reminder: %v", result.Error)
+	}
+	return nil
+}
+
+func (r *ReminderRepository) DeleteByID(id string) error {
+	result := r.db.Delete(&reminder.Reminder{}, "id = ?", id)
+	if result.Error != nil {
+		return fmt.Errorf("failed to delete reminder with id %s: %v", id, result.Error)
+	}
+	return nil
+}
+
+func (r *ReminderRepository) DeleteAll() error {
+	result := r.db.Where("id not null").Delete(&reminder.Reminder{})
+	if result.Error != nil {
+		return fmt.Errorf("failed to delete all reminders: %v", result.Error)
+	}
+	return nil
+}
+
+func (r *ReminderRepository) DeleteNotified() error {
+	result := r.db.Delete(&reminder.Reminder{}, "notified = ?", true)
+	if result.Error != nil {
+		return fmt.Errorf("failed to delete notified reminders: %v", result.Error)
+	}
+	return nil
 }
