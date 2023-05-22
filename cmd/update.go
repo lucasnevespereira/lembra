@@ -20,7 +20,6 @@ func init() {
 	updateCommand.PersistentFlags().String("title", "", "Notification Title")
 	updateCommand.PersistentFlags().String("message", "", "Notification Message")
 	updateCommand.PersistentFlags().String("sound", "", "Notification Sound")
-	updateCommand.PersistentFlags().String("time", "", "Time of the reminder (format: 2006-01-02 15:04)")
 
 	// Mark the required flags
 	_ = updateCommand.MarkFlagRequired("id")

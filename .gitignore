@@ -3,3 +3,5 @@
 lembra
 bin/
 reminders.db
+lembra.log
+lembra.pid

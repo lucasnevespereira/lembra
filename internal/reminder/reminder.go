@@ -11,12 +11,12 @@ type Reminder struct {
 	Title     string
 	Message   string
 	Sound     string
-	Time      time.Time
+	Time      string
 	Scheduled bool
 	Notified  bool
 }
 
-func NewReminder(title, message, sound string, time time.Time) (*Reminder, error) {
+func NewReminder(title, message, sound string, time string) (*Reminder, error) {
 	id, err := generateID()
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate ID: %v", err)
@@ -32,15 +32,21 @@ func NewReminder(title, message, sound string, time time.Time) (*Reminder, error
 	}, nil
 }
 
-func ParseTime(timeStr string) (time.Time, error) {
-	timeLayout := "2006-01-02 15h04"
-	currentTime := time.Now()
-	currentDate := currentTime.Format("2006-01-02")
-	parsedTime, err := time.ParseInLocation(timeLayout, fmt.Sprintf("%s %s", currentDate, timeStr), currentTime.Location())
-	if err != nil {
-		return time.Time{}, fmt.Errorf("failed to parse time: %v", err)
+func ParseTime(timeInput string) (string, error) {
+	timeLayout := "2006-01-02T15:04"
+
+	// Check if timeInput has the format "15:04"
+	if len(timeInput) == 5 && timeInput[2] == ':' {
+		timeInput = fmt.Sprintf("%sT%s", time.Now().Format("2006-01-02"), timeInput)
 	}
-	return parsedTime, nil
+
+	parsedTime, err := time.Parse(timeLayout, timeInput)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse time: %v", err)
+	}
+
+	formatted := parsedTime.Format(timeLayout)
+	return formatted, nil
 }
 
 func generateID() (string, error) {

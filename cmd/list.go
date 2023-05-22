@@ -34,7 +34,7 @@ func listReminders(cmd *cobra.Command, args []string) error {
 		fmt.Printf("Title: %s\n", r.Title)
 		fmt.Printf("Message: %s\n", r.Message)
 		fmt.Printf("Sound: %s\n", r.Sound)
-		fmt.Printf("Time: %s\n", r.Time.Format("2006-01-02 15:04"))
+		fmt.Printf("Time: %s\n", r.Time)
 		fmt.Println("------")
 	}
 
