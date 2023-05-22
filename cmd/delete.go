@@ -36,12 +36,19 @@ func deleteReminder(cmd *cobra.Command, args []string) error {
 
 		fmt.Println("All reminders deleted successfully")
 	} else {
-		err = reminderRepo.DeleteByID(id)
+		existingReminder, err := reminderRepo.GetByID(id)
 		if err != nil {
 			return err
 		}
 
-		fmt.Println("Reminder deleted successfully")
+		if existingReminder.ID != "" {
+			err = reminderRepo.DeleteByID(existingReminder.ID)
+			if err != nil {
+				return err
+			}
+
+			fmt.Println("Reminder deleted successfully")
+		}
 	}
 
 	return nil

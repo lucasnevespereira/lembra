@@ -2,8 +2,14 @@
 
 APP_NAME=lembra
 
-run:
-	go run *.go --title='$(title)' --message='$(message)' --sound='$(sound)' --time='$(time)'
+create:
+	bin/$(APP_NAME) create --title='$(title)' --message='$(message)' --sound='$(sound)' --time='$(time)'
+
+list:
+	bin/$(APP_NAME) list
+
+delete-all:
+	bin/$(APP_NAME) delete --all=true
 
 build:
 	go build -o bin/$(APP_NAME)
