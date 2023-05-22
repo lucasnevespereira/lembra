@@ -48,4 +48,4 @@ Contributions to Lembra are welcome! If you find a bug or have a suggestion for 
 
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
