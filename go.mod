@@ -13,10 +13,16 @@ require (
 )
 
 require (
+	github.com/0xAX/notificator v0.0.0-20220220101646-ee9b8921e557 // indirect
+	github.com/gen2brain/beeep v0.0.0-20230307103607-6e717729cb4f // indirect
+	github.com/go-toast/toast v0.0.0-20190211030409-01e6764cf0a4 // indirect
+	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect
+	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/tadvi/systray v0.0.0-20190226123456-11a2b8fa57af // indirect
 	golang.org/x/sys v0.8.0 // indirect
 )

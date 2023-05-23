@@ -2,11 +2,11 @@ package notifier
 
 import (
 	"fmt"
-	"github.com/lucasnevespereira/lembra/internal/reminder"
-	"github.com/lucasnevespereira/lembra/internal/repository"
+	"github.com/gen2brain/beeep"
+	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
 	"github.com/robfig/cron"
 	"log"
-	"os/exec"
 	"time"
 )
 
@@ -15,24 +15,17 @@ type CronNotifier struct {
 	cron *cron.Cron
 }
 
-func NewCronNotifier() (*CronNotifier, error) {
-	reminderRepository, err := repository.NewReminderRepository()
-	if err != nil {
-		return nil, err
-	}
+func NewCronNotifier(repository *repository.ReminderRepository, cron *cron.Cron) *CronNotifier {
 	return &CronNotifier{
-		repo: reminderRepository,
-		cron: cron.New(),
-	}, nil
+		repo: repository,
+		cron: cron,
+	}
 }
 
 func (n *CronNotifier) Start() error {
 	// cron to check every minute
 	err := n.cron.AddFunc("@every 1m", func() {
-		err := n.CheckReminders()
-		if err != nil {
-			fmt.Errorf("check reminders: %v", err)
-		}
+		n.CheckReminders()
 	})
 	if err != nil {
 		return fmt.Errorf("n.cron.AddFunc: %v", err)
@@ -46,11 +39,11 @@ func (n *CronNotifier) Stop() {
 	n.cron.Stop()
 }
 
-func (n *CronNotifier) CheckReminders() error {
+func (n *CronNotifier) CheckReminders() {
 	log.Println("Checking reminders...")
 	reminders, err := n.repo.GetAll()
 	if err != nil {
-		return fmt.Errorf("repo.GetAll: %v", err)
+		log.Printf("repo.GetAll: %v", err)
 	}
 
 	now := time.Now().Format("2006-01-02T15:04")
@@ -59,19 +52,22 @@ func (n *CronNotifier) CheckReminders() error {
 			n.sendNotification(r)
 		}
 	}
-
-	return nil
 }
 
 func (n *CronNotifier) sendNotification(reminder *reminder.Reminder) {
-	// TODO: Replace with a cross-platform notification library
-	cmd := exec.Command("osascript", "-e", fmt.Sprintf(`display notification "%s" with title "%s" sound name "%s"`, reminder.Message, reminder.Title, reminder.Sound))
-	err := cmd.Run()
+	err := beeep.Alert(reminder.Title, reminder.Message, "assets/icon.png")
 	if err != nil {
 		log.Printf("Failed to send notification for reminder ID %s: %v \n", reminder.ID, err)
 		return
 	}
+
+	err = n.repo.UpdateNotified(reminder, true)
+	if err != nil {
+		log.Printf("Failed to update reminder with id %s: %v \n", reminder.ID, err)
+	}
+
 	log.Printf("Notification sent for reminder ID %s \n", reminder.ID)
+
 	err = n.repo.DeleteByID(reminder.ID)
 	if err != nil {
 		log.Printf("Failed to delete reminder with id %s: %v \n", reminder.ID, err)

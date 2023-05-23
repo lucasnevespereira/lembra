@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lucasnevespereira/lembra/internal/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
 	"github.com/spf13/cobra"
 )
 

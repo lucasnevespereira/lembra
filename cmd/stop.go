@@ -48,5 +48,5 @@ func stopDaemon(cmd *cobra.Command, args []string) {
 		log.Fatalf("failed to delete lembra process logs: %v", err)
 	}
 
-	fmt.Println("Lembra Daemon stopped.")
+	fmt.Println("Lembra Daemon stopped")
 }
