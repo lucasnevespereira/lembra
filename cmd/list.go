@@ -3,7 +3,11 @@ package cmd
 import (
 	"fmt"
 	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository/database"
+	"github.com/lucasnevespereira/lembra/internal/utils/mapping"
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 var listCommand = &cobra.Command{
@@ -18,24 +22,28 @@ func init() {
 }
 
 func listReminders(cmd *cobra.Command, args []string) error {
-	reminderRepo, err := repository.NewReminderRepository()
+
+	db, err := database.Open()
+	if err != nil {
+		return fmt.Errorf("open db connection: %v\n", err)
+	}
+	reminderRepo := repository.NewReminderRepository(db)
+
+	dbReminders, err := reminderRepo.GetAll()
 	if err != nil {
 		return err
 	}
+	reminders := mapping.ToRemindersDTO(dbReminders)
 
-	reminders, err := reminderRepo.GetAll()
-	if err != nil {
-		return err
-	}
+	table := tablewriter.NewWriter(os.Stdout)
+	// Set the table header
+	table.SetHeader([]string{"ID", "Title", "Message", "Time"})
 
-	// Print the reminders
 	for _, r := range reminders {
-		fmt.Printf("ID: %s\n", r.ID)
-		fmt.Printf("Title: %s\n", r.Title)
-		fmt.Printf("Message: %s\n", r.Message)
-		fmt.Printf("Time: %s\n", r.Time)
-		fmt.Println("------")
+		table.Append([]string{r.ID, r.Title, r.Message, r.Time})
 	}
+
+	table.Render()
 
 	return nil
 }

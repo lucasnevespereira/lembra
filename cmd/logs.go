@@ -3,8 +3,8 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+	"github.com/lucasnevespereira/lembra/internal/utils/logger"
 	"github.com/spf13/cobra"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -23,12 +23,12 @@ func readLog(cmd *cobra.Command, args []string) {
 	logFilePath := "lembra.log"
 	absPath, err := filepath.Abs(logFilePath)
 	if err != nil {
-		log.Fatalf("failed to get absolute path: %v", err)
+		logger.Log.Fatalf("failed to get absolute path: %v", err)
 	}
 
 	file, err := os.Open(absPath)
 	if err != nil {
-		log.Fatalf("failed to open log file: %v", err)
+		logger.Log.Fatalf("failed to open log file: %v", err)
 	}
 	defer file.Close()
 
@@ -38,6 +38,6 @@ func readLog(cmd *cobra.Command, args []string) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatalf("error reading log file: %v", err)
+		logger.Log.Fatalf("error reading log file: %v", err)
 	}
 }

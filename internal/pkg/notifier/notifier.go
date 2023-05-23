@@ -5,17 +5,18 @@ import (
 	"github.com/gen2brain/beeep"
 	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
 	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
+	"github.com/lucasnevespereira/lembra/internal/utils/logger"
+	"github.com/lucasnevespereira/lembra/internal/utils/mapping"
 	"github.com/robfig/cron"
-	"log"
 	"time"
 )
 
 type CronNotifier struct {
-	repo *repository.ReminderRepository
+	repo repository.ReminderRepository
 	cron *cron.Cron
 }
 
-func NewCronNotifier(repository *repository.ReminderRepository, cron *cron.Cron) *CronNotifier {
+func NewCronNotifier(repository repository.ReminderRepository, cron *cron.Cron) *CronNotifier {
 	return &CronNotifier{
 		repo: repository,
 		cron: cron,
@@ -30,7 +31,7 @@ func (n *CronNotifier) Start() error {
 	if err != nil {
 		return fmt.Errorf("n.cron.AddFunc: %v", err)
 	}
-	log.Println("Cron job started")
+	logger.Log.Println("Cron job started")
 	n.cron.Start()
 	return nil
 }
@@ -40,12 +41,13 @@ func (n *CronNotifier) Stop() {
 }
 
 func (n *CronNotifier) CheckReminders() {
-	log.Println("Checking reminders...")
-	reminders, err := n.repo.GetAll()
+	logger.Log.Println("Checking reminders...")
+	dbReminders, err := n.repo.GetAll()
 	if err != nil {
-		log.Printf("repo.GetAll: %v", err)
+		fmt.Errorf("repo.GetAll: %v", err)
 	}
 
+	reminders := mapping.ToRemindersDTO(dbReminders)
 	now := time.Now().Format("2006-01-02T15:04")
 	for _, r := range reminders {
 		if r.Time == now {
@@ -57,19 +59,19 @@ func (n *CronNotifier) CheckReminders() {
 func (n *CronNotifier) sendNotification(reminder *reminder.Reminder) {
 	err := beeep.Alert(reminder.Title, reminder.Message, "assets/icon.png")
 	if err != nil {
-		log.Printf("Failed to send notification for reminder ID %s: %v \n", reminder.ID, err)
+		fmt.Errorf("Failed to send notification for reminder ID %s: %v \n", reminder.ID, err)
 		return
 	}
 
-	err = n.repo.UpdateNotified(reminder, true)
+	err = n.repo.UpdateNotified(reminder.ID, true)
 	if err != nil {
-		log.Printf("Failed to update reminder with id %s: %v \n", reminder.ID, err)
+		fmt.Errorf("Failed to update reminder with id %s: %v \n", reminder.ID, err)
 	}
 
-	log.Printf("Notification sent for reminder ID %s \n", reminder.ID)
+	fmt.Printf("Notification sent for reminder ID %s \n", reminder.ID)
 
 	err = n.repo.DeleteByID(reminder.ID)
 	if err != nil {
-		log.Printf("Failed to delete reminder with id %s: %v \n", reminder.ID, err)
+		fmt.Errorf("Failed to delete reminder with id %s: %v \n", reminder.ID, err)
 	}
 }

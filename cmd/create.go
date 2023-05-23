@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
 	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository/database"
+	"github.com/lucasnevespereira/lembra/internal/utils/mapping"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/cobra"
 )
@@ -30,10 +33,11 @@ func createReminder(cmd *cobra.Command, args []string) error {
 	message, _ := cmd.Flags().GetString("message")
 	timeStr, _ := cmd.Flags().GetString("time")
 
-	reminderRepo, err := repository.NewReminderRepository()
+	db, err := database.Open()
 	if err != nil {
-		return err
+		return fmt.Errorf("open db connection: %v\n", err)
 	}
+	reminderRepo := repository.NewReminderRepository(db)
 
 	time, err := reminder.ParseTime(timeStr)
 	if err != nil {
@@ -44,7 +48,7 @@ func createReminder(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	err = reminderRepo.Create(newReminder)
+	err = reminderRepo.Create(mapping.ToReminderDB(newReminder))
 	if err != nil {
 		return err
 	}

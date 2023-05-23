@@ -3,10 +3,11 @@ package cmd
 import (
 	"github.com/lucasnevespereira/lembra/internal/pkg/notifier"
 	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository/database"
+	"github.com/lucasnevespereira/lembra/internal/utils/logger"
 	"github.com/robfig/cron"
 	"github.com/sevlyar/go-daemon"
 	"github.com/spf13/cobra"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -34,7 +35,7 @@ func runDaemon(cmd *cobra.Command, args []string) {
 
 	child, err := daemonContext.Reborn()
 	if err != nil {
-		log.Fatalf("failed to start the daemon: %v", err)
+		logger.Log.Fatalf("failed to start the daemon: %v", err)
 	}
 	if child != nil {
 		os.Exit(0)
@@ -42,18 +43,19 @@ func runDaemon(cmd *cobra.Command, args []string) {
 	defer func(daemonContext *daemon.Context) {
 		err := daemonContext.Release()
 		if err != nil {
-			log.Printf("failed to release daemon ressources: %v", err)
+			logger.Log.Errorf("failed to release daemon ressources: %v", err)
 		}
 	}(daemonContext)
 
-	reminderRepository, err := repository.NewReminderRepository()
+	db, err := database.Open()
 	if err != nil {
-		log.Fatalf("creating repository: %v", err)
+		logger.Log.Errorf("open db connection: %v\n", err)
 	}
+	reminderRepo := repository.NewReminderRepository(db)
 
-	notifier := notifier.NewCronNotifier(reminderRepository, cron.New())
+	notifier := notifier.NewCronNotifier(reminderRepo, cron.New())
 	if err := notifier.Start(); err != nil {
-		log.Fatalf("starting notifier: %v", err)
+		logger.Log.Fatalf("starting notifier: %v", err)
 	}
 
 	// Wait for termination signals

@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository/database"
+	"github.com/lucasnevespereira/lembra/internal/utils/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -23,10 +25,11 @@ func deleteReminder(cmd *cobra.Command, args []string) error {
 	id, _ := cmd.Flags().GetString("id")
 	deleteAll, _ := cmd.Flags().GetBool("all")
 
-	reminderRepo, err := repository.NewReminderRepository()
+	db, err := database.Open()
 	if err != nil {
-		return err
+		return fmt.Errorf("open db connection: %v\n", err)
 	}
+	reminderRepo := repository.NewReminderRepository(db)
 
 	if deleteAll {
 		err = reminderRepo.DeleteAll()
@@ -34,7 +37,7 @@ func deleteReminder(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		fmt.Println("All reminders deleted successfully")
+		logger.Log.Infoln("All reminders deleted successfully")
 	} else {
 		existingReminder, err := reminderRepo.GetByID(id)
 		if err != nil {
