@@ -5,3 +5,4 @@ bin/
 reminders.db
 lembra.log
 lembra.pid
+coverage.out

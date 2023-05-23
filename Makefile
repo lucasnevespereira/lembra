@@ -12,6 +12,9 @@ update:
 delete:
 	bin/$(APP_NAME) delete --id='$(id)'
 
+delete-all:
+	bin/$(APP_NAME) delete --all=true
+
 list:
 	bin/$(APP_NAME) list
 

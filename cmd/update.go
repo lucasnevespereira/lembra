@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
 	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository/database"
 	"github.com/spf13/cobra"
 )
 
@@ -19,6 +20,7 @@ func init() {
 	updateCommand.PersistentFlags().String("id", "", "Reminder ID")
 	updateCommand.PersistentFlags().String("title", "", "Notification Title")
 	updateCommand.PersistentFlags().String("message", "", "Notification Message")
+	updateCommand.PersistentFlags().String("time", "", "Time of the reminder (format: 2006-01-02 15:04)")
 
 	// Mark the required flags
 	_ = updateCommand.MarkFlagRequired("id")
@@ -30,10 +32,11 @@ func updateReminder(cmd *cobra.Command, args []string) error {
 	message, _ := cmd.Flags().GetString("message")
 	timeStr, _ := cmd.Flags().GetString("time")
 
-	reminderRepo, err := repository.NewReminderRepository()
+	db, err := database.Open()
 	if err != nil {
-		return err
+		return fmt.Errorf("open db connection: %v\n", err)
 	}
+	reminderRepo := repository.NewReminderRepository(db)
 
 	existingReminder, err := reminderRepo.GetByID(id)
 	if err != nil {
