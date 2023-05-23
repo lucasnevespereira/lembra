@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lucasnevespereira/lembra/internal/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +33,6 @@ func listReminders(cmd *cobra.Command, args []string) error {
 		fmt.Printf("ID: %s\n", r.ID)
 		fmt.Printf("Title: %s\n", r.Title)
 		fmt.Printf("Message: %s\n", r.Message)
-		fmt.Printf("Sound: %s\n", r.Sound)
 		fmt.Printf("Time: %s\n", r.Time)
 		fmt.Println("------")
 	}

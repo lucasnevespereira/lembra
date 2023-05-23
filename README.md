@@ -3,8 +3,6 @@
 Lembra is a command-line reminder application that allows you to create and manage reminders for various tasks and
 events.
 
-🚧 This project is a work-in-progress 🚧
-
 ## Installation
 
 Clone the repository:
@@ -35,15 +33,16 @@ The application supports the following commands:
 - `list`: List all existing reminders.
 - `listen`: Start the reminder listener daemon.
 - `stop`: Stop the reminder listener daemon.
+- `logs`: Read the logs of the reminder listener daemon process.
 
 For detailed information about each command and its options, use the `--help` flag.
 
 ### Create a Reminder
 
-To create a new reminder, use the create command. Specify the title, message, sound, and time for the reminder.
+To create a new reminder, use the create command. Specify the title, message, and time for the reminder.
 
 ```bash
-./bin/lembra create --title "Meeting" --message "You have a meeting at 2 PM" --sound "default" --time "14:00"
+./bin/lembra create --title "Meeting" --message "You have a meeting at 2 PM" --time "14:00"
 ```
 
 ### Update a Reminder
@@ -64,21 +63,36 @@ To delete a reminder, use the delete command. Specify the ID of the reminder to 
 ```
 
 ### List Reminders
+
 To list all existing reminders, use the list command.
+
 ```bash
 ./bin/lembra list
 ```
 
 ### Start Reminder Listener Daemon
-To start the reminder listener daemon, use the listen command. The daemon will continuously check for reminders and display notifications when the time matches.
+
+To start the reminder listener daemon, use the listen command. The daemon will continuously check for reminders and
+display notifications when the time matches.
+
 ```bash
 ./bin/lembra listen
 ```
 
 ### Stop Reminder Listener Daemon
+
 To stop the reminder listener daemon, use the stop command.
+
 ```bash
 ./bin/lembra stop
+```
+
+### Read Daemon Logs
+
+To read the logs of the reminder listener daemon process, use the logs command.
+
+```bash
+./bin/lembra logs
 ```
 
 ## Configuration

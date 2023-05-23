@@ -7,28 +7,24 @@ import (
 )
 
 type Reminder struct {
-	ID        string
-	Title     string
-	Message   string
-	Sound     string
-	Time      string
-	Scheduled bool
-	Notified  bool
+	ID       string
+	Title    string
+	Message  string
+	Time     string
+	Notified bool
 }
 
-func NewReminder(title, message, sound string, time string) (*Reminder, error) {
+func NewReminder(title, message, time string) (*Reminder, error) {
 	id, err := generateID()
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate ID: %v", err)
 	}
 	return &Reminder{
-		ID:        id,
-		Title:     title,
-		Message:   message,
-		Sound:     sound,
-		Time:      time,
-		Scheduled: false,
-		Notified:  false,
+		ID:       id,
+		Title:    title,
+		Message:  message,
+		Time:     time,
+		Notified: false,
 	}, nil
 }
 

@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lucasnevespereira/lembra/internal/reminder"
-	"github.com/lucasnevespereira/lembra/internal/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +19,6 @@ func init() {
 	updateCommand.PersistentFlags().String("id", "", "Reminder ID")
 	updateCommand.PersistentFlags().String("title", "", "Notification Title")
 	updateCommand.PersistentFlags().String("message", "", "Notification Message")
-	updateCommand.PersistentFlags().String("sound", "", "Notification Sound")
 
 	// Mark the required flags
 	_ = updateCommand.MarkFlagRequired("id")
@@ -29,7 +28,6 @@ func updateReminder(cmd *cobra.Command, args []string) error {
 	id, _ := cmd.Flags().GetString("id")
 	title, _ := cmd.Flags().GetString("title")
 	message, _ := cmd.Flags().GetString("message")
-	sound, _ := cmd.Flags().GetString("sound")
 	timeStr, _ := cmd.Flags().GetString("time")
 
 	reminderRepo, err := repository.NewReminderRepository()
@@ -48,9 +46,7 @@ func updateReminder(cmd *cobra.Command, args []string) error {
 	if message != "" {
 		existingReminder.Message = message
 	}
-	if sound != "" {
-		existingReminder.Sound = sound
-	}
+
 	if timeStr != "" {
 		time, err := reminder.ParseTime(timeStr)
 		if err != nil {

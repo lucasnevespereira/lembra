@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/lucasnevespereira/lembra/internal/reminder"
-	"github.com/lucasnevespereira/lembra/internal/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
+	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/spf13/cobra"
 )
@@ -28,7 +28,6 @@ var createCommand = &cobra.Command{
 func createReminder(cmd *cobra.Command, args []string) error {
 	title, _ := cmd.Flags().GetString("title")
 	message, _ := cmd.Flags().GetString("message")
-	sound, _ := cmd.Flags().GetString("sound")
 	timeStr, _ := cmd.Flags().GetString("time")
 
 	reminderRepo, err := repository.NewReminderRepository()
@@ -40,7 +39,7 @@ func createReminder(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	newReminder, err := reminder.NewReminder(title, message, sound, time)
+	newReminder, err := reminder.NewReminder(title, message, time)
 	if err != nil {
 		return err
 	}

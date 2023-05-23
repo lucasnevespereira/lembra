@@ -2,7 +2,7 @@ package repository
 
 import (
 	"fmt"
-	"github.com/lucasnevespereira/lembra/internal/reminder"
+	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -56,6 +56,14 @@ func (r *ReminderRepository) GetByID(id string) (*reminder.Reminder, error) {
 
 func (r *ReminderRepository) Update(reminder *reminder.Reminder) error {
 	result := r.db.Save(reminder)
+	if result.Error != nil {
+		return fmt.Errorf("failed to update reminder: %v", result.Error)
+	}
+	return nil
+}
+
+func (r *ReminderRepository) UpdateNotified(reminder *reminder.Reminder, value bool) error {
+	result := r.db.Model(&reminder).Update("notified", value)
 	if result.Error != nil {
 		return fmt.Errorf("failed to update reminder: %v", result.Error)
 	}
