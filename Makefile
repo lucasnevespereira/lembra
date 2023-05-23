@@ -35,6 +35,13 @@ clean:
 lint:
 	golangci-lint run
 
+coverage:
+	go test -coverprofile=coverage.out ./...
+	go tool cover -func=coverage.out | grep total | awk '{print "Total test coverage: " $$3}'
+	rm coverage.out
+
+test:
+	go test -v ./...
 
 
 
