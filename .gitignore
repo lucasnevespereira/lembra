@@ -6,3 +6,4 @@ reminders.db
 lembra.log
 lembra.pid
 coverage.out
+dist/
