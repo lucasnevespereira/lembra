@@ -6,6 +6,7 @@ require (
 	github.com/gen2brain/beeep v0.0.0-20230307103607-6e717729cb4f
 	github.com/google/uuid v1.3.0
 	github.com/mattn/go-sqlite3 v1.14.16
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/robfig/cron v1.2.0
 	github.com/sevlyar/go-daemon v0.1.6
 	github.com/sirupsen/logrus v1.9.2
@@ -26,7 +27,6 @@ require (
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
-	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tadvi/systray v0.0.0-20190226123456-11a2b8fa57af // indirect

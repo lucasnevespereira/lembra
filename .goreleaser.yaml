@@ -1,0 +1,44 @@
+project_name: lembra
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - binary: lembra
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+release:
+  prerelease: auto
+universal_binaries:
+  - replace: true
+archives:
+  - files:
+      - LICENSE
+      - README.md
+snapshot:
+  name_template: "{{ incpatch .Version }}-snapshot"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+checksum:
+  name_template: 'checksums.txt'
+brews:
+  - name: lembra
+    homepage: https://github.com/lucasnevespereira/homebrew-tools
+    tap:
+      owner: lucasnevespereira
+      name: homebrew-tools
+      branch: main
+    commit_author:
+      name: lucasnevespereira
+      email: pereiraneveslucas@gmail.com
+
+# modelines
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
