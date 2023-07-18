@@ -47,6 +47,12 @@ test:
 	go test -v ./...
 
 
+# Releaser
+
+test-release:
+	 goreleaser release --snapshot --skip-publish --rm-dist
+
+
 
 
 
