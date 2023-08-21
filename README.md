@@ -3,8 +3,29 @@
 Lembra is a command-line reminder application that allows you to create and manage reminders for various tasks and
 events.
 
+<p>
+    <a href="https://github.com/lucasnevespereira/lembra/releases/latest"><img alt="GitHub release" src="https://img.shields.io/github/v/release/lucasnevespereira/lembra.svg?logo=github&style=flat-square"></a>
+    <a href="https://github.com/lucasnevespereira/lembra/actions/workflows/release.yml"><img alt="GitHub release" src="https://github.com/lucasnevespereira/lembra/actions/workflows/release.yml/badge.svg"></a> 
+</p>
+
 ## Installation
 
+### Install with Homebrew
+
+```
+brew tap lucasnevespereira/tools
+```
+
+```
+brew install lembra
+```
+
+or
+```
+brew install lucasnevespereira/tools/lembra
+```
+
+### Install manually
 Clone the repository:
 
 ```bash
