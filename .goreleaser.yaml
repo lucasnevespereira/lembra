@@ -1,7 +1,4 @@
 project_name: lembra
-before:
-  hooks:
-    - go mod tidy
 builds:
   - binary: lembra
     env:
