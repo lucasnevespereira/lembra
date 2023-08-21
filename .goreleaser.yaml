@@ -1,9 +1,8 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
+# This is an example .release.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
 project_name: lembra
 before:
   hooks:
-    # You may remove this if you don't use go modules.
     - go mod tidy
 builds:
   - id: lembra
@@ -14,17 +13,14 @@ builds:
       - linux
       - windows
       - darwin
+release:
+  prerelease: auto
+universal_binaries:
+  - replace: true
 archives:
-  - id: lembra
-    replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
-    files:
-      - LICENSE
-      - README.md
+  files:
+    - LICENSE
+    - README.md
 checksum:
   name_template: 'checksums.txt'
 snapshot:
@@ -42,6 +38,9 @@ brews:
       owner: lucasnevespereira
       name: homebrew-tools
       branch: main
+    commit_author:
+      name: lucasnevespereira
+      email: pereiraneveslucas@gmail.com
 
 # modelines, feel free to remove those if you don't want/use them:
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
