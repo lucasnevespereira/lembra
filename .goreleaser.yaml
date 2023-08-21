@@ -1,8 +1,12 @@
 project_name: lembra
 builds:
   - binary: lembra
+    ldflags:
+      - '-s -w -extldflags "-static"'
     env:
       - CGO_ENABLED=1
+      - CGO_CFLAGS=-static
+      - CGO_LDFLAGS=-static
     goos:
       - linux
       - windows
