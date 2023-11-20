@@ -2,11 +2,11 @@ package mapping
 
 import (
 	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
-	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/storage"
 )
 
-func ToReminderDB(reminder *reminder.Reminder) *repository.ReminderDB {
-	return &repository.ReminderDB{
+func ToReminderDB(reminder *reminder.Reminder) *storage.ReminderDB {
+	return &storage.ReminderDB{
 		ID:       reminder.ID,
 		Title:    reminder.Title,
 		Message:  reminder.Message,

@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
-	"github.com/lucasnevespereira/lembra/internal/pkg/repository/database"
+	"github.com/lucasnevespereira/lembra/internal/pkg/storage"
 	"github.com/lucasnevespereira/lembra/internal/utils/mapping"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -23,11 +21,11 @@ func init() {
 
 func listReminders(cmd *cobra.Command, args []string) error {
 
-	db, err := database.Open()
+	dbFile, err := storage.OpenStorageFile()
 	if err != nil {
-		return fmt.Errorf("open db connection: %v\n", err)
+		return err
 	}
-	reminderRepo := repository.NewReminderRepository(db)
+	reminderRepo := storage.NewReminderStorage(dbFile)
 
 	dbReminders, err := reminderRepo.GetAll()
 	if err != nil {

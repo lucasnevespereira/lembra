@@ -7,3 +7,5 @@ lembra.log
 lembra.pid
 coverage.out
 dist/
+remindersdb
+reminders.json

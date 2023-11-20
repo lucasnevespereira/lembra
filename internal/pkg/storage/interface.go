@@ -1,6 +1,6 @@
-package repository
+package storage
 
-type ReminderRepository interface {
+type ReminderStorage interface {
 	Create(reminder *ReminderDB) error
 	GetAll() ([]*ReminderDB, error)
 	GetByID(id string) (*ReminderDB, error)
@@ -12,13 +12,9 @@ type ReminderRepository interface {
 }
 
 type ReminderDB struct {
-	ID       string
-	Title    string
-	Message  string
-	Time     string
-	Notified bool
-}
-
-func (ReminderDB) TableName() string {
-	return "reminders"
+	ID       string `json:ID`
+	Title    string `json:"Title"`
+	Message  string `json:"Message"`
+	Time     string `json:"Time"`
+	Notified bool   `json:"Notified"`
 }

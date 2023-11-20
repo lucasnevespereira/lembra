@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gen2brain/beeep"
 	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
-	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/storage"
 	"github.com/lucasnevespereira/lembra/internal/utils/logger"
 	"github.com/lucasnevespereira/lembra/internal/utils/mapping"
 	"github.com/robfig/cron"
@@ -12,11 +12,11 @@ import (
 )
 
 type CronNotifier struct {
-	repo repository.ReminderRepository
+	repo storage.ReminderStorage
 	cron *cron.Cron
 }
 
-func NewCronNotifier(repository repository.ReminderRepository, cron *cron.Cron) *CronNotifier {
+func NewCronNotifier(repository storage.ReminderStorage, cron *cron.Cron) *CronNotifier {
 	return &CronNotifier{
 		repo: repository,
 		cron: cron,
