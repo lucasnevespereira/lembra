@@ -2,8 +2,7 @@ package cmd
 
 import (
 	"github.com/lucasnevespereira/lembra/internal/pkg/notifier"
-	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
-	"github.com/lucasnevespereira/lembra/internal/pkg/repository/database"
+	"github.com/lucasnevespereira/lembra/internal/pkg/storage"
 	"github.com/lucasnevespereira/lembra/internal/utils/logger"
 	"github.com/robfig/cron"
 	"github.com/sevlyar/go-daemon"
@@ -43,16 +42,16 @@ func runDaemon(cmd *cobra.Command, args []string) {
 	defer func(daemonContext *daemon.Context) {
 		err := daemonContext.Release()
 		if err != nil {
-			logger.Log.Errorf("failed to release daemon ressources: %v", err)
+			logger.Log.Errorf("failed to release daemon resources: %v", err)
 		}
 	}(daemonContext)
 
-	db, err := database.Open()
+	// Perform DB operations
+	dbFile, err := storage.OpenStorageFile()
 	if err != nil {
-		logger.Log.Errorf("open db connection: %v\n", err)
+		logger.Log.Fatalf("open storage file: %v", err)
 	}
-	reminderRepo := repository.NewReminderRepository(db)
-
+	reminderRepo := storage.NewReminderStorage(dbFile)
 	notifier := notifier.NewCronNotifier(reminderRepo, cron.New())
 	if err := notifier.Start(); err != nil {
 		logger.Log.Fatalf("starting notifier: %v", err)

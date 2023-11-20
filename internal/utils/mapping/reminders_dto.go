@@ -2,10 +2,10 @@ package mapping
 
 import (
 	"github.com/lucasnevespereira/lembra/internal/pkg/reminder"
-	"github.com/lucasnevespereira/lembra/internal/pkg/repository"
+	"github.com/lucasnevespereira/lembra/internal/pkg/storage"
 )
 
-func ToReminderDTO(reminderDB *repository.ReminderDB) *reminder.Reminder {
+func ToReminderDTO(reminderDB *storage.ReminderDB) *reminder.Reminder {
 	return &reminder.Reminder{
 		ID:       reminderDB.ID,
 		Title:    reminderDB.Title,
@@ -15,7 +15,7 @@ func ToReminderDTO(reminderDB *repository.ReminderDB) *reminder.Reminder {
 	}
 }
 
-func ToRemindersDTO(reminderDBs []*repository.ReminderDB) []*reminder.Reminder {
+func ToRemindersDTO(reminderDBs []*storage.ReminderDB) []*reminder.Reminder {
 	reminders := make([]*reminder.Reminder, len(reminderDBs))
 	for i, reminderDB := range reminderDBs {
 		reminders[i] = ToReminderDTO(reminderDB)
