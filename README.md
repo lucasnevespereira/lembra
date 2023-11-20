@@ -25,6 +25,13 @@ or
 brew install lucasnevespereira/tools/lembra
 ```
 
+Update lembra with
+
+```shell
+brew upgrade lucasnevespereira/tools/lembra
+
+```
+
 ### Install manually
 Clone the repository:
 
@@ -63,7 +70,7 @@ For detailed information about each command and its options, use the `--help` fl
 To create a new reminder, use the create command. Specify the title, message, and time for the reminder.
 
 ```bash
-./bin/lembra create --title "Meeting" --message "You have a meeting at 2 PM" --time "14:00"
+lembra create --title "Meeting" --message "You have a meeting at 2 PM" --time "14:00"
 ```
 
 ### Update a Reminder
@@ -72,7 +79,7 @@ To update an existing reminder, use the update command. Specify the ID of the re
 information.
 
 ```bash
-./bin/lembra update --id 123 --title "Updated Meeting" --message "The meeting time has changed to 3 PM"
+lembra update --id 123 --title "Updated Meeting" --message "The meeting time has changed to 3 PM"
 ```
 
 ### Delete a Reminder
@@ -80,7 +87,7 @@ information.
 To delete a reminder, use the delete command. Specify the ID of the reminder to be deleted.
 
 ```bash
-./bin/lembra delete --id 123
+lembra delete --id 123
 ```
 
 ### List Reminders
@@ -88,7 +95,7 @@ To delete a reminder, use the delete command. Specify the ID of the reminder to 
 To list all existing reminders, use the list command.
 
 ```bash
-./bin/lembra list
+lembra list
 ```
 
 ### Start Reminder Listener Daemon
@@ -97,7 +104,7 @@ To start the reminder listener daemon, use the listen command. The daemon will c
 display notifications when the time matches.
 
 ```bash
-./bin/lembra listen
+lembra listen
 ```
 
 ### Stop Reminder Listener Daemon
@@ -105,7 +112,7 @@ display notifications when the time matches.
 To stop the reminder listener daemon, use the stop command.
 
 ```bash
-./bin/lembra stop
+lembra stop
 ```
 
 ### Read Daemon Logs
@@ -113,7 +120,7 @@ To stop the reminder listener daemon, use the stop command.
 To read the logs of the reminder listener daemon process, use the logs command.
 
 ```bash
-./bin/lembra logs
+lembra logs
 ```
 
 ## Configuration
